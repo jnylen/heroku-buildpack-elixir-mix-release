@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build_path=$(cd $1 && pwd)
-app_names=$(cat $build_path/_build/elixir-mix-release-buildpack-app-name)
+app_names=$(cat $build_path/_build/elixir-mix-release-buildpack-app-names)
 app_names=${app_names//;/$'\n'}
 
 cat << EOF
