@@ -18,9 +18,13 @@ cd $build_path
 export_env_vars
 
 # output the app name so the bin/release script can read it
-app_name=$(mix run --no-start -e 'IO.write(Mix.Project.config[:app])')
-echo -n $app_name > _build/elixir-mix-release-buildpack-app-name
+app_names=$(mix run --no-start -e 'Mix.Project.config[:releases] |> Keyword.keys |> Enum.join(";") |> IO.write()')
+echo -n $app_names > _build/elixir-mix-release-buildpack-app-names
 
-echo "-----> Building release for $app_name"
-mix release --overwrite
+app_names=${app_names//;/$'\n'}
+for app_name in $app_names
+do
+    echo "-----> Building release for $app_name"
+    mix release --overwrite $app_name
+done
 
