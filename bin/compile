@@ -15,10 +15,23 @@ source ${build_pack_path}/lib/misc_funcs.sh
 
 cd $build_path
 
-app_name=$ELIXIR_RELEASE_NAME
-
 export_env_vars
 
-# output the app name so the bin/release script can read it
-echo "-----> Building release for $app_name"
-mix release --overwrite $app_name
+# Build Function
+build_release() {
+    echo "-----> Building release for $1"
+    mix release --overwrite $1
+}
+
+if [ -z "$ELIXIR_RELEASE_NAME" ]
+then
+        app_names=$(mix run --no-start -e 'Mix.Project.config[:releases] |> Keyword.keys |> Enum.join(";") |> IO.write()')
+        app_names=${app_names//;/$'\n'}
+        for app_name in $app_names
+        do
+            build_release $app_name
+        done
+
+else
+      build_release $app_name
+fi
