@@ -33,5 +33,5 @@ then
         done
 
 else
-      build_release $app_name
+      build_release $ELIXIR_RELEASE_NAME
 fi
